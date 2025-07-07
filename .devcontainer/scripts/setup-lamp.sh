@@ -105,26 +105,12 @@ EOF
 
 # Créer les dossiers nécessaires
 sudo mkdir -p /usr/src/phpmyadmin/{tmp,upload,save}
-sudo chown -R www-data:www-data /usr/src/phpmyadmin/{tmp,upload,save}
-sudo chmod 755 /usr/src/phpmyadmin/{tmp,upload,save}
 
-echo "✅ phpMyAdmin configuré"
+# Corriger les permissions pour phpMyAdmin
+sudo chown -R vscode:vscode /usr/src/phpmyadmin
+sudo chmod -R 755 /usr/src/phpmyadmin
+sudo chmod -R 777 /usr/src/phpmyadmin/{tmp,upload,save}
 
-# 3. DEMARRAGE DES SERVICES
-echo "🔄 Démarrage des services..."
-sudo service apache2 start >/dev/null 2>&1
-sudo service mariadb start >/dev/null 2>&1
-
-# 4. RÉSUMÉ
-echo ""
-echo "🎉 Environnement LAMP prêt!"
-echo "================================"
-echo "🌐 Apache: http://localhost"
-echo "🗄️  MySQL: mysql -u $MYSQL_ADMIN_USER -p$MYSQL_ADMIN_PASSWORD"
-echo "📊 phpMyAdmin: http://localhost/phpmyadmin"
-echo ""
-echo "💡 Scripts disponibles:"
-echo "   • database/scripts/initBDD.sh   - Initialiser la base métier"
-echo "   • database/scripts/reloadBDD.sh - Recharger la base métier"
-echo "   • database/scripts/saveBDD.sh   - Sauvegarder la base métier"
-echo "================================"
+echo "✅ phpMyAdmin et mysql configurés"
+echo "✅ MySQL: mysql -u $MYSQL_ADMIN_USER -p$MYSQL_ADMIN_PASSWORD"
+echo "✅ Environnement LAMP prêt!"

@@ -5,7 +5,7 @@
 WEB_DIR="site" # Chemin vers le dossier contenant les fichiers du site web
 DOC_DIR="documentation" # Chemin vers le dossier contenant la documentation 
 
-phpMyAdmin_DIR="../../usr/src/phpmyadmin" # Chemin vers le dossier phpMyAdmin installé dans le conteneur
+phpMyAdmin_DIR="/usr/src/phpmyadmin" # Chemin vers le dossier phpMyAdmin installé dans le conteneur
 
 # Créer le répertoire /run/mysqld si nécessaire et définir les permissions
 if [ ! -d /run/mysqld ]; then

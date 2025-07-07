@@ -11,12 +11,8 @@ RUN \
     # Installe les extensions PHP nécessaires pour MariaDB/MySQL
     && docker-php-ext-install mysqli pdo pdo_mysql
 
-# Copie et rend exécutable le script de configuration
-COPY .devcontainer/scripts/setup-lamp.sh /tmp/setup-lamp.sh
-RUN chmod +x /tmp/setup-lamp.sh
-
 # Expose les ports nécessaires
-EXPOSE 3306 8080
+EXPOSE 3306 8000 8001 8080
 
 # Démarre le serveur MySQL
 CMD ["mysqld"]

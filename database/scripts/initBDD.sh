@@ -32,7 +32,8 @@ mysql -u "$MYSQL_ADMIN_USER" -p"$MYSQL_ADMIN_PASSWORD" < "$TEMP_SQL_FILE_ENV"
 
 # Peupler la base de données à partir du fichier SQL
 echo "Peuplement de la BDD à partir de $SQL_FILE_BDD..."
-mysql -u "$MYSQL_ADMIN_USER" -p"$MYSQL_ADMIN_PASSWORD" < "$SQL_FILE_BDD"
+mysql -u "$MYSQL_ADMIN_USER" -p"$MYSQL_ADMIN_PASSWORD" -e "USE $DATABASE_NAME;" && \
+mysql -u "$MYSQL_ADMIN_USER" -p"$MYSQL_ADMIN_PASSWORD" "$DATABASE_NAME" < "$SQL_FILE_BDD"
 
 # Nettoyer le fichier temporaire
 rm "$TEMP_SQL_FILE_ENV"

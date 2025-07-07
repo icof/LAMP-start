@@ -9,6 +9,6 @@ updates:
       interval: weekly
 
   - package-ecosystem: "composer"
-    directory: "/web"
+    directory: "/"
     schedule:
       interval: weekly

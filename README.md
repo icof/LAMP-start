@@ -7,8 +7,11 @@ Voici l'arborescence du dépôt et le rôle des différents composants. Les fich
 
 ├── .devcontainer/ # config du codespace
 |  ├── devcontainer.json # Configuration du Dev Container pour VS Code
-|  └── Dockerfile # Dockerfile pour construire l'image du Dev Container  dans mariadb 
-├── .github/ # config pour les alertes de dépendances (sécurité)
+|  ├── setup-lamp.sh # Script de configuration de l'environnement LAMP (MariaDB, PhpMyAdmin)
+|  └── Dockerfile # Dockerfile pour construire l'image du Dev Container serveur php avec mariadb
+├── .github/ # config pour les actions GitHub 
+|  ├── dependabot.yml # Configuration pour Dependabot, qui gère les mises à jour des dépendances
+|  └── workflows/ # (Optionnel) Workflows GitHub Actions pour CI/CD automatisés
 ├── .vscode/ # config pour XDebug et parametres de vscode
 ├── database # scripts pour la BDD
 |  ├── scripts # contient 3 scripts bash : 1 pour initialiser la BDD métier (avec ses utilisateurs système), 1 pour sauver la bdd métier du codespace et 1 pour la recharger à partir du .sql présent dans le dépot

@@ -1,0 +1,58 @@
+# Workflow pour générer et déployer la documentation
+# Génère automatiquement la doc avec phpDocumentor
+
+name: 📚 Documentation
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'site/**'        # Seulement si on modifie le code
+      - 'README.md'       # Ou le README
+  workflow_dispatch:      # Manuel
+
+jobs:
+  documentation:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Récupérer le code
+        uses: actions/checkout@v4
+        
+      - name: 🐘 Installer PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          
+      - name: 📖 Générer la documentation
+        run: |
+          # Vérifier si phpDocumentor existe
+          if [ -f phpDocumentor.phar ]; then
+            echo "🔧 Génération de la documentation..."
+            php phpDocumentor.phar run -d ./site -t ./documentation
+            echo "✅ Documentation générée !"
+          else
+            echo "⚠️ phpDocumentor.phar non trouvé"
+            # Créer une doc basique
+            mkdir -p documentation
+            echo "<h1>Documentation non disponible</h1>" > documentation/index.html
+          fi
+          
+      - name: 📤 Déployer sur GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main'  # Seulement sur main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./documentation
+          
+      - name: 💬 Commenter la PR avec le lien
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '📚 Documentation mise à jour ! Voir : https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}'
+            })

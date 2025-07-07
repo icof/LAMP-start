@@ -34,10 +34,6 @@ RUN \
     # Donne tous les droits sur ce dossier (lecture/écriture/exécution)
     && chmod 777 /usr/src/phpmyadmin/tmp
 
-# Copie, rend exécutable puis exécute le script d'initialisation
-COPY database/scripts/init-mysql.sh /usr/local/bin/init-mysql.sh
-RUN chmod +x /usr/local/bin/init-mysql.sh
-
 # Expose les ports nécessaires
 EXPOSE 3306 8080
 

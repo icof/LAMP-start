@@ -36,6 +36,14 @@ sudo mysql -u root -e "
 # Vérifier la configuration
 if mysql -u "$MYSQL_ADMIN_USER" -p"$MYSQL_ADMIN_PASSWORD" -e "SELECT 1;" >/dev/null 2>&1; then
     echo "MySQL configuré (utilisateur: $MYSQL_ADMIN_USER)"
+    
+    # Configurer phpMyAdmin si disponible
+    if [ -d "/usr/src/phpmyadmin" ]; then
+        echo "Configuration phpMyAdmin..."
+        echo "\$cfg['Servers'][\$i]['user'] = '${MYSQL_ADMIN_USER}';" | sudo tee -a /usr/src/phpmyadmin/config.inc.php >/dev/null
+        echo "\$cfg['Servers'][\$i]['password'] = '${MYSQL_ADMIN_PASSWORD}';" | sudo tee -a /usr/src/phpmyadmin/config.inc.php >/dev/null
+        echo "phpMyAdmin configuré!"
+    fi
 else
     echo "Erreur configuration MySQL"
     exit 1

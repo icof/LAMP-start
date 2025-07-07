@@ -15,8 +15,10 @@ Voici l'arborescence du dépôt et le rôle des différents composants. Les fich
 ├── .vscode/ # config pour XDebug et parametres de vscode
 ├── database # scripts pour la BDD
 |  ├── scripts # contient 3 scripts bash : 1 pour initialiser la BDD métier (avec ses utilisateurs système), 1 pour sauver la bdd métier du codespace et 1 pour la recharger à partir du .sql présent dans le dépot
-|  └── sources-sql # fichiers SQL pour contruire la BDD métier, ses utilisateurs et ses données 
-├── site # Dossier racine du serveur web
+|  └── sources-sql # fichiers SQL pour contruire la BDD métier, ses utilisateurs, ses structures et ses données 
+├── documentation # Dossier pour la documentation générée par phpDocumentor
+├── site # Dossier pour le code du site web (API, front-end, etc.)
+├── tests # Dossier pour les tests unitaires (PHPUnit)
 ├── start.sh # Script de lancement pour démarrer le service mariadb et les instances web du site et de phpMyAdmin.
 └── stop.sh # Script pour arreter le service mariadb et les instances web du site et de phpMyAdmin.
 

@@ -7,10 +7,10 @@ echo "🚀 Initialisation de l'environnement LAMP..."
 chmod +x /workspaces/LAMP-start/.devcontainer/scripts/*.sh 2>/dev/null || true
 chmod +x /workspaces/LAMP-start/database/scripts/*.sh 2>/dev/null || true
 
-# Variables d'environnement par défaut
+# Vérification stricte des variables d'environnement obligatoires
 if [ -z "$MYSQL_ADMIN_USER" ] || [ -z "$MYSQL_ADMIN_PASSWORD" ]; then
-    export MYSQL_ADMIN_USER="admin"
-    export MYSQL_ADMIN_PASSWORD="admin123"
+    echo "❌ ERREUR: Les variables MYSQL_ADMIN_USER et MYSQL_ADMIN_PASSWOR doivent être définies dans le containerEnv de devcontainer.json"
+    exit 1
 fi
 
 echo "📝 Configuration avec utilisateur: $MYSQL_ADMIN_USER"

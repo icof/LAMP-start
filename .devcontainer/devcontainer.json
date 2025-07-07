@@ -54,7 +54,7 @@
 	},
 
 	// Commande à exécuter après la création du conteneur
-	"postCreateCommand": ".devcontainer/scripts/setup-lamp.sh" // lance l'initialisation complète de l'environnement LAMP
+	"postCreateCommand": "chmod +x .devcontainer/scripts/setup-lamp.sh && .devcontainer/scripts/setup-lamp.sh" // lance l'initialisation complète de l'environnement LAMP
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"

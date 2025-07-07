@@ -9,8 +9,11 @@ RUN \
     # Nettoie le cache des paquets pour alléger l'image
     && rm -rf /var/lib/apt/lists/* \
     # Installe les extensions PHP nécessaires pour MariaDB/MySQL
-    && docker-php-ext-install mysqli pdo pdo_mysql \
-    && chmod 777 scripts/setup-lamp.sh
+    && docker-php-ext-install mysqli pdo pdo_mysql
+
+# Copie et rend exécutable le script de configuration
+COPY .devcontainer/scripts/setup-lamp.sh /tmp/setup-lamp.sh
+RUN chmod +x /tmp/setup-lamp.sh
 
 # Expose les ports nécessaires
 EXPOSE 3306 8080

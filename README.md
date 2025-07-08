@@ -27,8 +27,8 @@ Voici l'arborescence du dépôt et le rôle des différents composants :
 │   └── tools/ : Outils de génération de documentation (phpDocumentor.phar)
 ├── site/ : Dossier pour le code du site web (API, front-end, etc.) ⭐
 ├── tests/ : Dossier pour les tests unitaires (PHPUnit) ⭐
-├── composer.json : Configuration des dépendances PHP et autoloader
-├── composer.lock : Fichier de verrouillage des versions exactes des dépendances
+├── composer.json : Configuration des dépendances PHP et autoloader (utilisé pour PHPUnit)
+├── composer.lock : Fichier de verrouillage des versions exactes des dépendances (utilisé pour PHPUnit)
 ├── start.sh : Script de lancement pour démarrer les services
 └── stop.sh : Script pour arreter les services
 ```

@@ -30,11 +30,10 @@ jobs:
 
     - name: Generate Documentation
       run: |
-        mkdir -p documentation/generated
         php documentation/tools/phpDocumentor.phar run -d ./site -t ./documentation/generated
 
     - name: Upload Documentation Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: phpdoc-documentation
         path: documentation/generated/

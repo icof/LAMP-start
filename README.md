@@ -16,7 +16,9 @@ Voici l'arborescence du dépôt et le rôle des différents composants. Les fich
 ├── database # scripts pour la BDD
 |  ├── scripts # contient 3 scripts bash : 1 pour initialiser la BDD métier (avec ses utilisateurs système), 1 pour sauver la bdd métier du codespace et 1 pour la recharger à partir du .sql présent dans le dépot
 |  └── sources-sql # fichiers SQL pour contruire la BDD métier, ses utilisateurs, ses structures et ses données 
-├── documentation # Dossier pour la documentation générée par phpDocumentor
+├── documentation # Dossier pour la documentation du projet
+|  ├── generated/ # Documentation générée automatiquement par phpDocumentor
+|  └── tools/ # Outils de génération de documentation (phpDocumentor.phar)
 ├── site # Dossier pour le code du site web (API, front-end, etc.)
 ├── tests # Dossier pour les tests unitaires (PHPUnit)
 ├── start.sh # Script de lancement pour démarrer le service mariadb et les instances web du site et de phpMyAdmin.
@@ -27,23 +29,13 @@ Voici l'arborescence du dépôt et le rôle des différents composants. Les fich
 
 Ce dépôt est configuré pour fonctionner avec les Codespaces de GitHub et les Dev Containers de Visual Studio Code. Suivez les étapes ci-dessous pour configurer votre environnement de développement.
 
-!important! 
-Pour être executables, les scripts bash executés dans le codespace (start.sh, stop.sh, initBDD.sh, ...) doivent avoir les bonnes permissions.
-
-1. Utilisez la commande ```ls -l``` pour afficher les permissions des fichiers dans le répertoire contenant vos scripts bash.
-Cela affichera les permissions actuelles des fichiers. Les scripts doivent avoir l'autorisation d'exécution (x) pour être exécutables.
-
-2. Ajouter les droits d'exécution
-Si les scripts n'ont pas les bonnes permissions, utilisez la commande chmod pour leur ajouter les droits d'exécution :
-```chmod +x ./start.sh ./stop.sh ./database/scripts/*.sh```
-
-
 ### Utilisation avec GitHub Codespaces
 1. **Créez un codespace pour ouvrir ce dépot** :
    - Cliquez sur le bouton "Code" dans GitHub et sélectionnez "Open with Codespaces".
    - Si vous n'avez pas encore de Codespace, cliquez sur "New Codespace".
 
    Le Codespace ainsi créé contient toutes les configurations nécessaires pour démarrer le développement.
+   Au lancement, le fichier devcontainer.json 
 
 ### Serveur php et service mariadb (avec la base métier)
 
@@ -164,11 +156,11 @@ function addition(int $a, int $b) : int {
 plus d'infos sur [le guide phpDocumentor](https://docs.phpdoc.org/guide/getting-started/what-is-a-docblock.html#what-is-a-docblock)
 
 **Commande de génération :**
-```
-php phpDocumentor.phar run -d ./site -t ./documentation
+```bash
+php documentation/tools/phpDocumentor.phar run -d ./site -t ./documentation/generated
 ```
 - ```-d ./site``` : dossier contenant le code à documenter.
-- ```-t ./documentation``` : dossier où sera générée la documentation HTML.
+- ```-t ./documentation/generated``` : dossier où sera générée la documentation HTML.
 
 **Résultat :**
 Après exécution, ouvrez le fichier index.html sur le serveur executé sur le port 8001 dans un navigateur pour consulter la documentation de votre projet.

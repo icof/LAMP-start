@@ -3,7 +3,7 @@
 
 # Définir les chemin vers les dossiers des sites
 WEB_DIR="site" # Chemin vers le dossier contenant les fichiers du site web
-DOC_DIR="documentation" # Chemin vers le dossier contenant la documentation 
+DOC_DIR="documentation/generated" # Chemin vers le dossier contenant la documentation 
 
 phpMyAdmin_DIR="/usr/src/phpmyadmin" # Chemin vers le dossier phpMyAdmin installé dans le conteneur
 

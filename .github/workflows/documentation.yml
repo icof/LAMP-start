@@ -1,0 +1,50 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'site/**/*.php'
+      - 'documentation/tools/**'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'site/**/*.php'
+
+jobs:
+  generate-documentation:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, xml, ctype, iconv, intl
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Generate Documentation
+      run: |
+        mkdir -p documentation/generated
+        php documentation/tools/phpDocumentor.phar run -d ./site -t ./documentation/generated
+
+    - name: Upload Documentation Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: phpdoc-documentation
+        path: documentation/generated/
+        retention-days: 30
+
+    - name: Check Documentation Generated
+      run: |
+        if [ ! -f "documentation/generated/index.html" ]; then
+          echo "❌ Documentation generation failed - index.html not found"
+          exit 1
+        else
+          echo "✅ Documentation generated successfully"
+        fi

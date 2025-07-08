@@ -11,8 +11,6 @@
  */
 
 require_once 'classes/Calculator.php';
-require_once 'classes/User.php';
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -24,14 +22,13 @@ require_once 'classes/User.php';
         body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
         .demo-section { background: #f5f5f5; padding: 15px; margin: 20px 0; border-radius: 5px; }
         .success { color: green; font-weight: bold; }
-        .info { color: blue; }
     </style>
 </head>
 <body>
-    <h1>🎯 Site LAMP - Exemple de documentation</h1>
+    <h1>🎯 Site LAMP - Exemple d'utilisation</h1>
     
     <div class="demo-section">
-        <h2>📊 Test de la classe Calculator</h2>
+        <h2>📊 Utilisation de la classe Calculator</h2>
         <?php
         $calc = new Calculator();
         $result = $calc->add(5, 3);
@@ -43,18 +40,41 @@ require_once 'classes/User.php';
     </div>
     
     <div class="demo-section">
-        <h2>👤 Test de la classe User</h2>
-        <?php
-        $user = new User("Alice", "alice@example.com");
-        echo "<p class='success'>Utilisateur créé : " . $user->getFullInfo() . "</p>";
-        echo "<p class='info'>Email valide : " . ($user->isEmailValid() ? "Oui" : "Non") . "</p>";
-        ?>
-    </div>
-    
-    <div class="demo-section">
         <h2>📚 Génération de la documentation</h2>
         <p>Pour générer la documentation de ce code :</p>
         <pre><code>php documentation/tools/phpDocumentor.phar run -d ./site -t ./documentation</code></pre>
+    </div>
+
+    <div class="demo-section">
+        <h2>🧪 Tests de la classe Calculator</h2>
+        <p>Les tests unitaires sont exécutés pour valider le bon fonctionnement de la classe Calculator. Pour tester :</p>
+        <pre><code>php tests/CalculatorTest.php --testdox</code></pre>
+        <p>Résultats des tests :</p>
+        <pre><code>
+            Calculator
+            ✘ Addition
+            │
+            │ Failed asserting that -3.0 matches expected 3.
+            │
+            │ /workspaces/LAMP-start/tests/CalculatorTest.php:43
+            │
+            ✔ Addition with decimals
+            ✔ Addition with negative numbers
+            ✔ Subtraction
+            ✔ Multiplication
+            ✔ Multiplication by zero
+            ✔ Division
+            ✔ Division with decimal result
+            ✔ Division by zero throws exception
+            ✔ History
+            ✔ Clear history
+            ✔ History contains timestamp
+            ✔ Multiple additions
+            ✔ Performance
+
+            FAILURES!
+            Tests: 14, Assertions: 24, Failures: 1.
+        </code></pre>
     </div>
 
 </body>

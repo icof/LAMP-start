@@ -1,6 +1,6 @@
 <?php
 /**
- * Classe Calculator - Exemple de documentation PHPDoc
+ * Classe Calculator - Exemple de calculatrice simple
  *
  * Cette classe fournit des méthodes basiques de calcul mathématique.
  * Elle sert d'exemple pour illustrer la documentation automatique avec phpDocumentor.

@@ -1,28 +1,34 @@
-# Config de Codespace LAMP
+# Codespace LAMP d'exemple
+
+Ce codespace fournit un environnement de développement LAMP (Linux, Apache/PHP, MariaDB) prêt à l'emploi pour vos projets PHP. Il est configuré avec tous les outils modernes nécessaires au développement professionnel : débogage avec XDebug, tests unitaires avec PHPUnit, génération de documentation avec phpDocumentor, et intégration CI/CD avec GitHub Actions.
+
+Ce dépôt contient un exemple basique de site php avec une classe et le fichier de test associé.
 
 
 ## Arborescence du dépôt
 
 Voici l'arborescence du dépôt et le rôle des différents composants. Les fichiers et dossiers à modifier sont en gras :
 
-├── .devcontainer/ # config du codespace
-|  ├── devcontainer.json # Configuration du Dev Container pour VS Code
-|  ├── setup-lamp.sh # Script de configuration de l'environnement LAMP (MariaDB, PhpMyAdmin)
-|  └── Dockerfile # Dockerfile pour construire l'image du Dev Container serveur php avec mariadb
-├── .github/ # config pour les actions GitHub 
-|  ├── dependabot.yml # Configuration pour Dependabot, qui gère les mises à jour des dépendances
-|  └── workflows/ # (Optionnel) Workflows GitHub Actions pour CI/CD automatisés
-├── .vscode/ # config pour XDebug et parametres de vscode
-├── database # scripts pour la BDD
-|  ├── scripts # contient 3 scripts bash : 1 pour initialiser la BDD métier (avec ses utilisateurs système), 1 pour sauver la bdd métier du codespace et 1 pour la recharger à partir du .sql présent dans le dépot
-|  └── sources-sql # fichiers SQL pour contruire la BDD métier, ses utilisateurs, ses structures et ses données 
-├── documentation # Dossier pour la documentation du projet
-|  ├── generated/ # Documentation générée automatiquement par phpDocumentor
-|  └── tools/ # Outils de génération de documentation (phpDocumentor.phar)
-├── site # Dossier pour le code du site web (API, front-end, etc.)
-├── tests # Dossier pour les tests unitaires (PHPUnit)
-├── start.sh # Script de lancement pour démarrer le service mariadb et les instances web du site et de phpMyAdmin.
-└── stop.sh # Script pour arreter le service mariadb et les instances web du site et de phpMyAdmin.
+├── .devcontainer/ : config du codespace
+|  ├── **devcontainer.json** : Configuration du Dev Container pour VS Code (les variables d'environnement y sont définies et à adapter éventuellement)
+|  ├── setup-lamp.sh : Script de configuration de l'environnement LAMP (MariaDB, PhpMyAdmin)
+|  └── Dockerfile : Dockerfile pour construire l'image du Dev Container serveur php avec mariadb
+├── .github/ : config pour les actions GitHub 
+|  ├── dependabot.yml : Configuration pour Dependabot, qui gère les mises à jour des dépendances
+|  └── **workflows/** : Workflows GitHub Actions pour CI/CD automatisés
+├── .vscode/ : config pour XDebug et parametres de vscode
+├── **database/** : scripts pour la BDD
+|  ├── scripts/ : contient 3 scripts bash : 1 pour initialiser la BDD métier (avec ses utilisateurs système), 1 pour sauver la bdd métier du codespace et 1 pour la recharger à partir du .sql présent dans le dépot
+|  └── **sources-sql/** : fichiers SQL pour contruire la BDD métier, ses utilisateurs, ses structures et ses données 
+├── documentation/ : Dossier pour la documentation du projet
+|  ├── generated/ : Documentation générée automatiquement par phpDocumentor
+|  └── tools/ : Outils de génération de documentation (phpDocumentor.phar)
+├── **site/** : Dossier pour le code du site web (API, front-end, etc.)
+├── **tests/** : Dossier pour les tests unitaires (PHPUnit)
+├── composer.json : Configuration des dépendances PHP et autoloader
+├── composer.lock : Fichier de verrouillage des versions exactes des dépendances
+├── start.sh : Script de lancement pour démarrer le service mariadb et les instances web du site et de phpMyAdmin
+└── stop.sh : Script pour arreter le service mariadb et les instances web du site et de phpMyAdmin
 
 
 ## Configuration du Codespace et lancement de l'application

@@ -1,0 +1,58 @@
+name: Manual Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Type of test to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - syntax
+        - tests
+        - quality
+
+jobs:
+  manual-test:
+    runs-on: ubuntu-latest
+    name: Manual Test - ${{ github.event.inputs.test_type }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, xml, ctype, iconv, intl
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Run Syntax Check
+      if: github.event.inputs.test_type == 'syntax' || github.event.inputs.test_type == 'all'
+      run: |
+        echo "🔍 Testing PHP Syntax..."
+        find site tests -name "*.php" -exec php -l {} \;
+
+    - name: Run PHPUnit Tests
+      if: github.event.inputs.test_type == 'tests' || github.event.inputs.test_type == 'all'
+      run: |
+        echo "🧪 Running PHPUnit Tests..."
+        ./vendor/bin/phpunit --verbose
+
+    - name: Run Quality Checks
+      if: github.event.inputs.test_type == 'quality' || github.event.inputs.test_type == 'all'
+      run: |
+        echo "📊 Running Quality Checks..."
+        composer validate --strict
+        echo "✅ Composer validation passed"
+
+    - name: Test Summary
+      run: |
+        echo "🎉 Manual test completed!"
+        echo "Test type: ${{ github.event.inputs.test_type }}"
+        echo "Status: ✅ Success"

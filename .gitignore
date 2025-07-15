@@ -8,5 +8,6 @@ documentation/cache
 
 # Autres fichiers à ignorer
 .phpdoc
+.phpunit.cache
 vendor
 

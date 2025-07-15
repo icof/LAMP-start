@@ -1,0 +1,77 @@
+name: Code Quality & Syntax
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'site/**/*.php'
+      - 'tests/**/*.php'
+      - '.github/workflows/syntax.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'site/**/*.php'
+      - 'tests/**/*.php'
+
+jobs:
+  syntax-check:
+    runs-on: ubuntu-latest
+    name: PHP Syntax & Quality Check
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+        extensions: mbstring, xml, ctype, iconv, intl
+
+    - name: PHP Syntax Check
+      run: |
+        echo "🔍 Checking PHP syntax..."
+        find site -name "*.php" -print0 | xargs -0 -I {} php -l {}
+        if [ -d "tests" ]; then
+          find tests -name "*.php" -print0 | xargs -0 -I {} php -l {}
+        fi
+        echo "✅ PHP syntax check completed"
+
+    - name: Download PHP CodeSniffer
+      run: |
+        echo "📥 Downloading PHP CodeSniffer..."
+        curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
+        chmod +x phpcs.phar
+
+    - name: Code Style Check (PSR-12)
+      run: |
+        echo "🎯 Checking code style (PSR-12)..."
+        php phpcs.phar --standard=PSR12 --extensions=php site/ || echo "⚠️  Code style issues found (not blocking)"
+        if [ -d "tests" ]; then
+          php phpcs.phar --standard=PSR12 --extensions=php tests/ || echo "⚠️  Test code style issues found (not blocking)"
+        fi
+
+    - name: Validate Composer
+      run: |
+        echo "📋 Validating composer configuration..."
+        composer validate --strict
+        
+        # Vérification du lock file (non-bloquante)
+        if ! composer validate --lock --quiet; then
+          echo "⚠️ composer.lock might need update"
+          echo "💡 Consider running 'composer update --lock' locally"
+        else
+          echo "✅ composer.lock is up to date"
+        fi
+        echo "✅ Composer validation completed"
+
+    - name: Summary
+      run: |
+        echo ""
+        echo "🎉 Code quality check completed!"
+        echo ""
+        echo "✅ PHP Syntax: Verified"
+        echo "📋 Code Style: PSR-12 checked"
+        echo "📦 Composer: Validated"
+        echo ""
+        echo "💡 This workflow ensures basic code quality standards"

@@ -1,0 +1,12 @@
+# Documentation générée et cache : ignorer le contenu mais préserver les dossiers
+documentation/generated/*
+documentation/cache/*
+
+# Préserver les dossiers importants même vides
+!site/
+!tests/
+
+# Autres fichiers à ignorer
+.phpdoc
+vendor
+

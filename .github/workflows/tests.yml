@@ -1,0 +1,145 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'site/**/*.php'
+      - 'tests/**/*.php'
+      - 'composer.json'
+      - 'composer.lock'
+      - '.github/workflows/tests.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'site/**/*.php'
+      - 'tests/**/*.php'
+      - 'composer.json'
+      - 'composer.lock'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        php-version: ['8.3']
+
+    name: PHP ${{ matrix.php-version }} Tests
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: mbstring, xml, ctype, iconv, intl
+        coverage: xdebug
+
+    - name: Validate composer.json
+      run: |
+        echo "📋 Validating composer configuration..."
+        composer validate --strict
+        
+        # Vérification du lock file (non-bloquante)
+        if ! composer validate --lock --quiet; then
+          echo "⚠️ composer.lock might need update"
+          echo "💡 Consider running 'composer update --lock' locally"
+        else
+          echo "✅ composer.lock is up to date"
+        fi
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-${{ matrix.php-version }}-
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Check if tests exist
+      id: check-tests
+      run: |
+        if [ -d "tests" ] && [ "$(find tests -name '*.php' | wc -l)" -gt 0 ]; then
+          echo "tests_exist=true" >> $GITHUB_OUTPUT
+          echo "✅ Tests directory found with PHP files"
+        else
+          echo "tests_exist=false" >> $GITHUB_OUTPUT
+          echo "⚠️ No tests found in tests/ directory"
+        fi
+
+    - name: Create PHPUnit configuration
+      if: steps.check-tests.outputs.tests_exist == 'true'
+      run: |
+        cat > phpunit.xml << 'EOF'
+        <?xml version="1.0" encoding="UTF-8"?>
+        <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+                 bootstrap="vendor/autoload.php"
+                 colors="true"
+                 cacheDirectory=".phpunit.cache"
+                 failOnDeprecation="false"
+                 failOnNotice="false"
+                 failOnWarning="false">
+            <testsuites>
+                <testsuite name="default">
+                    <directory>tests</directory>
+                </testsuite>
+            </testsuites>
+            <coverage>
+                <report>
+                    <html outputDirectory="coverage-html"/>
+                    <clover outputFile="coverage.xml"/>
+                </report>
+            </coverage>
+            <source>
+                <include>
+                    <directory>site</directory>
+                </include>
+            </source>
+        </phpunit>
+        EOF
+
+    - name: Run PHPUnit tests
+      if: steps.check-tests.outputs.tests_exist == 'true'
+      run: |
+        echo "🧪 Running PHPUnit tests..."
+        ./vendor/bin/phpunit --coverage-clover coverage.xml
+        echo "✅ Tests completed"
+
+    - name: Upload test coverage
+      if: steps.check-tests.outputs.tests_exist == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-coverage-php-${{ matrix.php-version }}
+        path: |
+          coverage-html/
+          coverage.xml
+        retention-days: 7
+
+    - name: No tests warning
+      if: steps.check-tests.outputs.tests_exist == 'false'
+      run: |
+        echo "⚠️ No tests found to run"
+        echo "💡 Create test files in the tests/ directory to enable testing"
+        echo "📖 Example: tests/CalculatorTest.php"
+
+    - name: Test Summary
+      run: |
+        echo ""
+        echo "🎯 Test Execution Summary"
+        echo "========================"
+        if [ "${{ steps.check-tests.outputs.tests_exist }}" == "true" ]; then
+          echo "✅ Tests found and executed"
+          echo "📊 Coverage report generated"
+        else
+          echo "⚠️  No tests to execute"
+          echo "💡 Add tests to improve code quality"
+        fi
+        echo ""

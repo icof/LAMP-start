@@ -1,0 +1,14 @@
+# Ce fichier de configuration pour Dependabot permet de maintenir à jour les dépendances de votre projet Devcontainer et Composer.
+# Il est configuré pour vérifier les mises à jour des dépendances chaque semaine.
+# Pour plus de détails, consultez https://containers.dev/guide/dependabot 
+version: 2
+updates:
+  - package-ecosystem: "devcontainers"
+    directory: "/"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: "composer"
+    directory: "/"
+    schedule:
+      interval: weekly

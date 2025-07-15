@@ -24,7 +24,7 @@ Voici l'arborescence du dépôt et le rôle des différents composants :
 │   └── sources-sql/ : fichiers SQL pour contruire la BDD métier ⭐
 ├── documentation/ : Dossier pour la documentation du projet
 │   ├── generated/ : Documentation générée automatiquement par phpDocumentor
-│   └── tools/ : Outils de génération de documentation (phpDocumentor.phar)
+│   └── tools/ : Outils de génération de documentation (phpDocumentor.phar, phpdoc.xml)
 ├── site/ : Dossier pour le code du site web (API, front-end, etc.) ⭐
 ├── tests/ : Dossier pour les tests unitaires (PHPUnit) ⭐
 ├── composer.json : Configuration des dépendances PHP et autoloader (utilisé pour PHPUnit)

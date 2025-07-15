@@ -1,4 +1,7 @@
-documentation/generated/*.*
+# Documentation générée et cache
+documentation/generated/*
 documentation/cache/*
+
+# Autres fichiers à ignorer
 .phpdoc
 vendor

@@ -41,7 +41,7 @@ require_once 'classes/Calculator.php';
     
     <div class="demo-section">
         <h2>📚 Génération de la documentation</h2>
-        <p>Pour générer la documentation de ce code :</p>
+        <p>Pour générer la documentation des classes de ce code :</p>
         <pre><code>php documentation/tools/phpDocumentor.phar run -d ./site -t ./documentation</code></pre>
     </div>
 

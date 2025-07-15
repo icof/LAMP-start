@@ -40,7 +40,9 @@ class CalculatorTest extends TestCase
         // Assert (vérification)
         $this->assertEquals(5, $this->calculator->add(3, 2));
         $this->assertEquals(-3, $this->calculator->add(-5, 2));
-        $this->assertEquals(3, $this->calculator->add(-5, 2)); // test qui doit échouer
+
+        // Exemple de test qui doit échouer
+        // $this->assertEquals(3, $this->calculator->add(-5, 2)); 
 
         $this->assertIsFloat($this->calculator->add(3, 2));
     }

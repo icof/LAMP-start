@@ -2,16 +2,8 @@ name: Code Quality & Syntax
 
 on:
   push:
-    branches: [ main, mast    - name: Summary
-      run: |
-        echo ""
-        echo "🎉 Code quality check completed!"
-        echo ""
-        echo "✅ PHP Syntax: Verified"
-        echo "📋 Code Style: PSR-12 checked"
-        echo "📦 Composer: Validated"
-        echo ""
-        echo "💡 This workflow ensures basic code quality standards"aths:
+    branches: [ main, master ]
+    paths:
       - 'site/**/*.php'
       - 'tests/**/*.php'
       - '.github/workflows/syntax.yml'
@@ -82,4 +74,4 @@ jobs:
         echo "📋 Code Style: PSR-12 checked"
         echo "📦 Composer: Validated"
         echo ""
-        echo "� This workflow ensures basic code quality standards"
+        echo "💡 This workflow ensures basic code quality standards"

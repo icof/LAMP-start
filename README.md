@@ -18,6 +18,9 @@ Voici l'arborescence du dépôt et le rôle des différents composants :
 ├── .github/ : config pour les actions GitHub 
 │   ├── dependabot.yml : Configuration pour Dependabot, qui gère les mises à jour des dépendances
 │   └── workflows/ : Workflows GitHub Actions pour CI/CD automatisés
+│       ├── documentation.yml : Génération automatique de documentation avec phpDocumentor
+│       ├── syntax.yml : Vérification de la qualité et syntaxe du code PHP
+│       └── tests.yml : Exécution des tests unitaires avec PHPUnit
 ├── .vscode/ : config pour XDebug et parametres de vscode
 ├── database/ : scripts pour la BDD ⭐
 │   ├── scripts/ : contient 3 scripts bash pour gérer la BDD métier
@@ -42,7 +45,9 @@ Voici l'arborescence du dépôt et le rôle des différents composants :
 ### ⚙️ Fichiers de configuration (optionnels)
 
 - **`devcontainer.json`** : Variables d'environnement du codespace à adapter
-- **`workflows/`** : Actions GitHub pour CI/CD automatisés
+- **`workflows/`** : Actions GitHub pour CI/CD automatisés (tests, documentation, qualité)
+- **`documentation/tools/phpdoc.xml`** : Configuration de génération de documentation
+- **`composer.json`** : Gestion des dépendances PHP et autoloader
 
 
 ## Configuration du Codespace et lancement de l'application
@@ -184,3 +189,64 @@ php documentation/tools/phpDocumentor.phar run -d ./site -t ./documentation/gene
 
 **Résultat :**
 Après exécution, ouvrez le fichier index.html sur le serveur executé sur le port 8001 dans un navigateur pour consulter la documentation de votre projet.
+
+## GitHub Actions - Workflows automatisés
+
+Ce projet utilise **GitHub Actions** pour automatiser les tâches de développement (CI/CD). Trois workflows sont configurés pour s'exécuter automatiquement lors des modifications du code.
+
+### 🔧 Workflow "Code Quality & Syntax" (`syntax.yml`)
+
+**Déclenchement :** À chaque push/pull request modifiant les fichiers PHP dans `site/` ou `tests/`
+
+**Actions effectuées :**
+- ✅ **Vérification syntaxe PHP** : Détecte les erreurs de syntaxe dans tous les fichiers .php
+- 📋 **Analyse du style de code PSR-12** : Vérifie le respect des standards de codage PHP
+- 📦 **Validation Composer** : S'assure que composer.json est valide
+
+**Résultat :** Le workflow échoue si des erreurs de syntaxe sont trouvées, mais continue malgré les problèmes de style (informatifs).
+
+### 🧪 Workflow "Tests" (`tests.yml`)
+
+**Déclenchement :** À chaque push/pull request modifiant les fichiers PHP, composer.json ou composer.lock
+
+**Actions effectuées :**
+- 🔍 **Détection automatique des tests** : Vérifie la présence de tests dans le dossier `tests/`
+- ⚙️ **Configuration PHPUnit** : Génère automatiquement la configuration PHPUnit
+- 🧪 **Exécution des tests** : Lance tous les tests unitaires avec PHPUnit
+- 📊 **Génération de coverage** : Crée un rapport de couverture de code
+- 📤 **Upload des résultats** : Met à disposition les rapports en téléchargement
+
+**Résultat :** Le workflow échoue si des tests échouent. Si aucun test n'est trouvé, affiche un avertissement mais réussit.
+
+### 📚 Workflow "Documentation" (`documentation.yml`)
+
+**Déclenchement :** À chaque push/pull request modifiant les fichiers PHP dans `site/` ou les outils de documentation
+
+**Actions effectuées :**
+- 📖 **Génération de documentation** : Utilise phpDocumentor pour créer la documentation HTML
+- 📤 **Upload de la documentation** : Met à disposition la documentation générée en téléchargement
+- ✅ **Vérification de réussite** : S'assure que index.html a bien été généré
+
+**Résultat :** Génère une documentation HTML complète accessible via les artefacts GitHub Actions.
+
+### 📥 Accès aux résultats des workflows
+
+**Pour consulter les résultats :**
+1. Allez dans l'onglet **"Actions"** de votre repository GitHub
+2. Cliquez sur l'exécution du workflow qui vous intéresse
+3. Dans la section **"Artifacts"**, téléchargez :
+   - `phpdoc-documentation` : Documentation HTML générée
+   - `test-coverage-php-8.3` : Rapports de tests et couverture de code
+
+### ⚙️ Configuration des workflows
+
+**Workflows configurés pour :**
+- **PHP 8.3** : Version moderne et performante
+- **Extensions** : mbstring, xml, ctype, iconv, intl, dom, simplexml, tokenizer
+- **Standards** : PSR-12 pour le style de code
+- **Outils** : phpDocumentor, PHPUnit, PHP CodeSniffer
+
+**Personnalisation :**
+- Modifiez les fichiers dans `.github/workflows/` pour adapter les workflows à vos besoins
+- Ajustez les chemins de déclenchement dans la section `paths:` de chaque workflow
+- Configurez `documentation/tools/phpdoc.xml` pour personnaliser la génération de documentation

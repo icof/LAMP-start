@@ -39,7 +39,17 @@ jobs:
         coverage: xdebug
 
     - name: Validate composer.json
-      run: composer validate --strict
+      run: |
+        echo "📋 Validating composer configuration..."
+        composer validate --strict
+        
+        # Vérification du lock file (non-bloquante)
+        if ! composer validate --lock --quiet; then
+          echo "⚠️ composer.lock might need update"
+          echo "💡 Consider running 'composer update --lock' locally"
+        else
+          echo "✅ composer.lock is up to date"
+        fi
 
     - name: Cache Composer packages
       id: composer-cache

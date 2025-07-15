@@ -2,8 +2,16 @@ name: Code Quality & Syntax
 
 on:
   push:
-    branches: [ main, master ]
-    paths:
+    branches: [ main, mast    - name: Summary
+      run: |
+        echo ""
+        echo "🎉 Code quality check completed!"
+        echo ""
+        echo "✅ PHP Syntax: Verified"
+        echo "📋 Code Style: PSR-12 checked"
+        echo "📦 Composer: Validated"
+        echo ""
+        echo "💡 This workflow ensures basic code quality standards"aths:
       - 'site/**/*.php'
       - 'tests/**/*.php'
       - '.github/workflows/syntax.yml'
@@ -53,8 +61,16 @@ jobs:
 
     - name: Validate Composer
       run: |
-        echo "📋 Validating composer.json..."
+        echo "📋 Validating composer configuration..."
         composer validate --strict
+        
+        # Vérification du lock file (non-bloquante)
+        if ! composer validate --lock --quiet; then
+          echo "⚠️ composer.lock might need update"
+          echo "💡 Consider running 'composer update --lock' locally"
+        else
+          echo "✅ composer.lock is up to date"
+        fi
         echo "✅ Composer validation completed"
 
     - name: Summary

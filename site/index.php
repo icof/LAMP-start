@@ -52,7 +52,7 @@ require_once 'classes/Calculator.php';
     <div class="demo-section">
         <h2>🧪 Tests de la classe Calculator</h2>
         <p>Les tests unitaires sont exécutés pour valider le bon fonctionnement de la classe Calculator. Pour tester :</p>
-        <pre><code>vendor/bin/phpunit --testdox tests/CalculatorTest.php</code></pre>
+        <pre><code>composer install<br>vendor/bin/phpunit --testdox tests/CalculatorTest.php</code></pre>
         <p>Résultats des tests :</p>
         <pre><code>
             Calculator

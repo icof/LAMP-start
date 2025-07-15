@@ -6,6 +6,7 @@ on:
     paths:
       - 'site/**/*.php'
       - 'documentation/tools/**'
+      - '.github/workflows/documentation.yml'
   pull_request:
     branches: [ main, master ]
     paths:

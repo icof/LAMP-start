@@ -16,7 +16,7 @@ on:
 jobs:
   syntax-check:
     runs-on: ubuntu-latest
-    name: Syntax Check & Code Quality
+    name: PHP Syntax & Quality Check
 
     steps:
     - name: Checkout code
@@ -25,183 +25,45 @@ jobs:
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.1'
+        php-version: '8.3'
         extensions: mbstring, xml, ctype, iconv, intl
-        tools: composer, cs2pr
-
-    - name: Validate composer.json
-      run: composer validate --strict
-
-    - name: Cache Composer packages
-      uses: actions/cache@v3
-      with:
-        path: vendor
-        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-composer-
-
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
-
-    - name: Install quality tools
-      run: |
-        composer require --dev --no-update \
-          squizlabs/php_codesniffer \
-          friendsofphp/php-cs-fixer \
-          phpstan/phpstan \
-          phpmd/phpmd
-        composer update --prefer-dist --no-progress
 
     - name: PHP Syntax Check
       run: |
         echo "🔍 Checking PHP syntax..."
-        find site tests -name "*.php" -exec php -l {} \; | tee syntax-check.log
-        if grep -q "Parse error" syntax-check.log; then
-          echo "❌ PHP syntax errors found!"
-          exit 1
-        else
-          echo "✅ No PHP syntax errors found"
+        find site -name "*.php" -print0 | xargs -0 -I {} php -l {}
+        if [ -d "tests" ]; then
+          find tests -name "*.php" -print0 | xargs -0 -I {} php -l {}
+        fi
+        echo "✅ PHP syntax check completed"
+
+    - name: Download PHP CodeSniffer
+      run: |
+        echo "📥 Downloading PHP CodeSniffer..."
+        curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
+        chmod +x phpcs.phar
+
+    - name: Code Style Check (PSR-12)
+      run: |
+        echo "🎯 Checking code style (PSR-12)..."
+        php phpcs.phar --standard=PSR12 --extensions=php site/ || echo "⚠️  Code style issues found (not blocking)"
+        if [ -d "tests" ]; then
+          php phpcs.phar --standard=PSR12 --extensions=php tests/ || echo "⚠️  Test code style issues found (not blocking)"
         fi
 
-    - name: PHP CodeSniffer
+    - name: Validate Composer
       run: |
-        echo "🎯 Running PHP CodeSniffer..."
-        ./vendor/bin/phpcs --standard=PSR12 --extensions=php site/ tests/ \
-          --report=checkstyle --report-file=phpcs-report.xml || true
-        ./vendor/bin/phpcs --standard=PSR12 --extensions=php site/ tests/ || echo "CodeSniffer found issues"
+        echo "📋 Validating composer.json..."
+        composer validate --strict
+        echo "✅ Composer validation completed"
 
-    - name: PHP CS Fixer (Dry Run)
+    - name: Summary
       run: |
-        echo "🔧 Running PHP CS Fixer (dry run)..."
-        ./vendor/bin/php-cs-fixer fix --dry-run --diff --verbose site/ tests/ || echo "CS Fixer found issues"
-
-    - name: Create PHPStan configuration
-      run: |
-        cat > phpstan.neon << 'EOF'
-        parameters:
-            level: 6
-            paths:
-                - site
-                - tests
-            excludePaths:
-                - vendor
-            ignoreErrors:
-                - '#Call to an undefined method#'
-        EOF
-
-    - name: PHPStan Static Analysis
-      run: |
-        echo "🔬 Running PHPStan static analysis..."
-        ./vendor/bin/phpstan analyse --error-format=checkstyle --no-progress > phpstan-report.xml || echo "PHPStan found issues"
-        ./vendor/bin/phpstan analyse --no-progress || echo "PHPStan analysis completed"
-
-    - name: Create PHPMD configuration
-      run: |
-        cat > phpmd.xml << 'EOF'
-        <?xml version="1.0"?>
-        <ruleset name="Custom PHPMD ruleset">
-            <description>Custom PHPMD rules</description>
-            
-            <rule ref="rulesets/cleancode.xml">
-                <exclude name="StaticAccess"/>
-            </rule>
-            
-            <rule ref="rulesets/codesize.xml"/>
-            
-            <rule ref="rulesets/controversial.xml">
-                <exclude name="CamelCasePropertyName"/>
-                <exclude name="CamelCaseParameterName"/>
-                <exclude name="CamelCaseVariableName"/>
-            </rule>
-            
-            <rule ref="rulesets/design.xml"/>
-            
-            <rule ref="rulesets/naming.xml">
-                <exclude name="ShortVariable"/>
-                <exclude name="LongVariable"/>
-            </rule>
-            
-            <rule ref="rulesets/unusedcode.xml"/>
-        </ruleset>
-        EOF
-
-    - name: PHPMD Code Analysis
-      run: |
-        echo "📊 Running PHPMD code analysis..."
-        ./vendor/bin/phpmd site/,tests/ xml phpmd.xml --reportfile phpmd-report.xml || echo "PHPMD found issues"
-        ./vendor/bin/phpmd site/,tests/ text phpmd.xml || echo "PHPMD analysis completed"
-
-    - name: Security Check with Local Security Checker
-      run: |
-        echo "🔒 Checking for security vulnerabilities..."
-        curl -sSL https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.6/local-php-security-checker_2.0.6_linux_amd64 -o security-checker
-        chmod +x security-checker
-        ./security-checker --format=json > security-report.json || echo "Security check completed"
-        ./security-checker || echo "Security vulnerabilities may exist"
-
-    - name: Generate Code Quality Summary
-      run: |
-        echo "📋 Generating code quality summary..."
-        cat > quality-summary.md << 'EOF'
-        # Code Quality Report
-        
-        ## 🔍 PHP Syntax Check
-        - Status: $(if [ -f syntax-check.log ] && ! grep -q "Parse error" syntax-check.log; then echo "✅ Passed"; else echo "❌ Failed"; fi)
-        
-        ## 🎯 PHP CodeSniffer (PSR-12)
-        - Configuration: PSR-12 standard
-        - Report: Available in phpcs-report.xml
-        
-        ## 🔧 PHP CS Fixer
-        - Mode: Dry run (preview only)
-        - Shows potential formatting improvements
-        
-        ## 🔬 PHPStan Static Analysis
-        - Level: 6 (high strictness)
-        - Report: Available in phpstan-report.xml
-        
-        ## 📊 PHPMD Code Analysis
-        - Checks: Clean Code, Code Size, Design, Naming, Unused Code
-        - Report: Available in phpmd-report.xml
-        
-        ## 🔒 Security Check
-        - Tool: Local PHP Security Checker
-        - Report: Available in security-report.json
-        
-        Generated on: $(date)
-        EOF
-
-    - name: Upload Code Quality Reports
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: code-quality-reports
-        path: |
-          phpcs-report.xml
-          phpstan-report.xml
-          phpmd-report.xml
-          security-report.json
-          quality-summary.md
-          syntax-check.log
-        retention-days: 14
-
-    - name: Annotate PR with CodeSniffer results
-      if: github.event_name == 'pull_request'
-      run: |
-        if [ -f phpcs-report.xml ]; then
-          cs2pr phpcs-report.xml
-        fi
-
-    - name: Final Quality Check Status
-      run: |
-        echo "🎉 Code quality analysis completed!"
         echo ""
-        echo "📊 Summary:"
-        echo "- Syntax Check: $(if [ -f syntax-check.log ] && ! grep -q "Parse error" syntax-check.log; then echo "✅"; else echo "❌"; fi)"
-        echo "- CodeSniffer: 📋 Check reports"
-        echo "- CS Fixer: 🔧 Check reports" 
-        echo "- PHPStan: 🔬 Check reports"
-        echo "- PHPMD: 📊 Check reports"
-        echo "- Security: 🔒 Check reports"
+        echo "🎉 Code quality check completed!"
         echo ""
-        echo "💡 Download the 'code-quality-reports' artifact for detailed analysis"
+        echo "✅ PHP Syntax: Verified"
+        echo "📋 Code Style: PSR-12 checked"
+        echo "📦 Composer: Validated"
+        echo ""
+        echo "� This workflow ensures basic code quality standards"

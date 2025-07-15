@@ -4,6 +4,7 @@ documentation/cache/*
 
 # Préserver les dossiers importants même vides
 !site/
+!tests/
 
 # Autres fichiers à ignorer
 .phpdoc

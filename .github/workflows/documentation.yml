@@ -10,6 +10,7 @@ on:
     branches: [ main, master ]
     paths:
       - 'site/**/*.php'
+      - 'documentation/tools/**'
 
 jobs:
   generate-documentation:
@@ -23,14 +24,19 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.1'
-        extensions: mbstring, xml, ctype, iconv, intl
+        extensions: mbstring, xml, ctype, iconv, intl, dom, simplexml, tokenizer
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
+    - name: Verify phpDocumentor permissions
+      run: |
+        chmod +x documentation/tools/phpDocumentor.phar
+        ls -la documentation/tools/phpDocumentor.phar
+
     - name: Generate Documentation
       run: |
-        php documentation/tools/phpDocumentor.phar run -d ./site -t ./documentation/generated
+        php documentation/tools/phpDocumentor.phar run -c documentation/tools/phpdoc.xml --verbose
 
     - name: Upload Documentation Artifact
       uses: actions/upload-artifact@v4

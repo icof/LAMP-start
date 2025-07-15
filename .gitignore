@@ -1,3 +1,4 @@
 documentation/generated/*.*
+documentation/cache/*
 .phpdoc
 vendor

@@ -1,10 +1,8 @@
 #!/bin/bash
 # script pour démarrer les serveurs PHP et MariaDB
 
-# Définir les chemin vers les dossiers des sites
+# Définir les chemins vers les dossiers des sites
 WEB_DIR="site" # Chemin vers le dossier contenant les fichiers du site web
-DOC_DIR="documentation/generated" # Chemin vers le dossier contenant la documentation 
-
 phpMyAdmin_DIR="/usr/src/phpmyadmin" # Chemin vers le dossier phpMyAdmin installé dans le conteneur
 
 # Créer le répertoire /run/mysqld si nécessaire et définir les permissions
@@ -17,11 +15,6 @@ fi
 # Démarrer le service MariaDB
 echo "Démarrage du service MariaDB..."
 sudo service mariadb start
-
-# Executer le script d'initialisation de la base de données database/scripts/initDBB.sh
-# echo "Exécution du script initDBB.sh..."
-# sudo chmod +x ./database/scripts/initDBB.sh
-# sudo ./database/scripts/initDBB.sh
 
 # Fonction générique pour vérifier si un port est utilisé
 is_port_in_use() {
@@ -37,15 +30,6 @@ if is_port_in_use $WEB_PORT; then
 else
     echo "Démarrage du serveur PHP sur http://0.0.0.0:$WEB_PORT depuis $WEB_DIR"
     php -S 0.0.0.0:$WEB_PORT -t $WEB_DIR &
-fi
-
-# Démarrage du serveur PHP pour le dossier doc
-DOC_PORT=8001
-if is_port_in_use $DOC_PORT; then
-    echo "Le serveur PHP pour le dossier doc est déjà démarré sur le port $DOC_PORT"
-else
-    echo "Démarrage du serveur PHP pour le dossier doc sur http://0.0.0.0:$DOC_PORT depuis $DOC_DIR"
-    php -S 0.0.0.0:$DOC_PORT -t $DOC_DIR &
 fi
 
 # Démarrage du serveur PHP pour phpMyAdmin

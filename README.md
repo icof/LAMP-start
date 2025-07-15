@@ -117,78 +117,33 @@ Ce Codespace contient XDebug pour le débogage PHP.
 
 ## Tests unitaires
 
-Ce projet utilise PHPUnit pour les tests unitaires.
+Ce projet utilise **PHPUnit** pour les tests unitaires automatisés et executés manuellement.
 
-1. ** Installer les dépendances **
-Pour exécuter les tests unitaires, assurez-vous que les dépendances nécessaires sont installées via Composer en executant :
+🧪 **[Guide complet des tests →](tests/README.md)**
+
+**Commandes rapides :**
 ```bash
+# Installation des dépendances
 composer install
-```
-2. ** Lancer les tests **
-Une fois les dépendances installées, lancez les tests avec la commande suivante :
-```bash
+
+# Exécution des tests
 vendor/bin/phpunit --testdox tests/
 ```
-Cela exécutera tous les tests définis dans le projet et affichera les résultats dans le terminal.
 
-3. ** Ajouter de nouveaux tests **
-Pour ajouter un nouveau test :
-- Créez un fichier de test dans le répertoire approprié (par exemple, tests/modele/NouveauModeleTest.php).
-
-- Assurez-vous que le fichier suit la convention de nommage `NomClasseTest.php` et que la classe de test étend `PHPUnit\Framework\TestCase`.
-
-Exemple de test unitaire simple :
-
-```php
-<?php
-
-use PHPUnit\Framework\TestCase;
-
-class ExempleTest extends TestCase
-{
-   public function testAddition()
-   {
-      $this->assertEquals(4, 2 + 2);
-   }
-}
-```
-
-Une fois le test ajouté, relancez la commande PHPUnit pour vérifier son bon fonctionnement.
+Les tests sont également exécutés automatiquement via GitHub Actions à chaque modification du code.
 
 ## Documentation
 
-**phpDocumentor** est un outil qui permet de générer automatiquement la documentation technique de votre code PHP à partir des commentaires présents dans vos fichiers source.
+Ce projet utilise **phpDocumentor** pour générer automatiquement la documentation technique du code PHP.
 
-**Fonctionnement :**
-- *Commentaires PHPDoc* : Vous commentez vos classes, fonctions et propriétés avec des blocs de commentaires spéciaux (PHPDoc).
-- *Génération automatique* : phpDocumentor analyse ces commentaires et crée une documentation HTML structurée et navigable.
-- *Personnalisation* : Vous pouvez choisir le dossier à documenter (```-d ./site```) et le dossier de sortie (```-t ./documentation```).
+📖 **[Guide complet de la documentation →](documentation/README.md)**
 
-**Exemple de commentaire PHPDoc :**
-```php
-<?php
-/**
- * Additionne deux nombres.
- *
- * @param int $a
- * @param int $b
- * @return int
- */
-function addition(int $a, int $b) : int {
-    return $a + $b;
-}
-```
-plus d'infos sur [le guide phpDocumentor](https://docs.phpdoc.org/guide/getting-started/what-is-a-docblock.html#what-is-a-docblock)
-
-**Commande de génération :**
+**Génération rapide :**
 ```bash
-php documentation/tools/phpDocumentor.phar run -d ./site -t ./documentation/generated
+php documentation/tools/phpDocumentor.phar run -c documentation/tools/phpdoc.xml
 ```
-- ```-d ./site``` : dossier contenant le code à documenter.
-- ```-t ./documentation/generated``` : dossier où sera générée la documentation HTML.
 
-**Résultat :**
-Après exécution, ouvrez le fichier index.html sur le serveur executé sur le port 8001 dans un navigateur pour consulter la documentation de votre projet.
+La documentation générée est disponible dans `documentation/generated/index.html`.
 
 ## GitHub Actions - Workflows automatisés
 

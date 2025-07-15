@@ -10,15 +10,6 @@ else
     echo "Le serveur PHP pour le dossier web n'est pas démarré sur le port $WEB_PORT"
 fi
 
-# Arrêter le serveur PHP pour le dossier documentation
-DOC_PORT=8001
-if lsof -i:$DOC_PORT > /dev/null; then
-    echo "Arrêt du serveur PHP pour le dossier web sur le port $DOC_PORT"
-    sudo kill $(lsof -t -i:$DOC_PORT)
-else
-    echo "Le serveur PHP pour le dossier web n'est pas démarré sur le port $DOC_PORT"
-fi
-
 # Arrêter le serveur PHP pour phpMyAdmin
 PHPMYADMIN_PORT=8080
 if lsof -i:$PHPMYADMIN_PORT > /dev/null; then

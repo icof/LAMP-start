@@ -41,14 +41,18 @@ require_once 'classes/Calculator.php';
     
     <div class="demo-section">
         <h2>📚 Génération de la documentation</h2>
-        <p>Pour générer la documentation des classes de ce code :</p>
-        <pre><code>php documentation/tools/phpDocumentor.phar run -d ./site -t ./documentation</code></pre>
+        <p>Pour générer localement la documentation des classes de ce code, depuis la racine du projet utilisez la commande suivante :</p>
+        <pre><code>php documentation/tools/phpDocumentor.phar run -c documentation/tools/phpdoc.xml</code></pre>
+        <p>Cette commande analysera les commentaires PHPDoc et générera la documentation dans le dossier <code>documentation/generated</code>.</p>
+        <p>Après la génération, démarrez un serveur php sur le port 8001 et mappez-le avec le dossier <code>documentation/generated</code> :</p>
+        <pre><code>php -S localhost:8001 -t documentation/generated/</code></pre>
+        <p>Ouvrez dans le navigateur le site executé sur le port 8001 du conteneur pour consulter la documentation générée.</p>
     </div>
 
     <div class="demo-section">
         <h2>🧪 Tests de la classe Calculator</h2>
         <p>Les tests unitaires sont exécutés pour valider le bon fonctionnement de la classe Calculator. Pour tester :</p>
-        <pre><code>php tests/CalculatorTest.php --testdox</code></pre>
+        <pre><code>vendor/bin/phpunit --testdox tests/CalculatorTest.php</code></pre>
         <p>Résultats des tests :</p>
         <pre><code>
             Calculator

@@ -10,7 +10,14 @@
 
 
 	// Liste des fonctionnalités à ajouter au conteneur de développement. // Plus d'informations : https://containers.dev/features.
-	// "features": {},
+	"features": {
+		"ghcr.io/devcontainers/features/node:1": {
+			"version": "18"
+		},
+		"ghcr.io/devcontainers/features/php:1": {
+			"installComposer": true
+		}
+	},
 
 	// Liste des personnalisations du conteneur. 
 	"customizations": {

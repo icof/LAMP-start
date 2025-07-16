@@ -9,13 +9,6 @@
             "type": "php",
             "request": "launch",
             "port": 9000,
-            "pathMappings": {
-                "/workspaces/LAMP-start": "${workspaceFolder}"
-            },
-            "log": false,
-            "ignore": [
-                "**/vendor/**/*.php"
-            ],
             "xdebugSettings": {
                 "max_children": 100,
                 "max_data": 1024,

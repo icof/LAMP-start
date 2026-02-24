@@ -18,7 +18,7 @@
             "name": "🌐 Listen for XDebug (Serveur Web)",
             "type": "php",
             "request": "launch",
-            "port": 9000,
+            "port": 9003,
             "xdebugSettings": {
                 "max_children": 100,
                 "max_data": 1024,

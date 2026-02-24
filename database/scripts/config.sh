@@ -7,5 +7,5 @@
 WEBAPP_DB_NAME="app_database"
 
 # Utilisateur applicatif et son mot de passe 
-WEBAPP_USER="mediateq-web"
-WEBAPP_PASSWORD="m3d14t3qP4ssw0rd!"
+WEBAPP_USER="user-web"
+WEBAPP_PASSWORD="P@ssw0rd!"

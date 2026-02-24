@@ -3,13 +3,14 @@
 # Script d'initialisation complète de l'environnement LAMP
 echo "🚀 Initialisation de l'environnement LAMP..."
 
-# Rendre tous les scripts exécutables
-chmod +x /workspaces/LAMP-start/.devcontainer/scripts/*.sh 2>/dev/null || true
-chmod +x /workspaces/LAMP-start/database/scripts/*.sh 2>/dev/null || true
+# Rendre tous les scripts exécutables (chemins agnostiques au nom du repo)
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+chmod +x "$REPO_ROOT"/.devcontainer/scripts/*.sh 2>/dev/null || true
+chmod +x "$REPO_ROOT"/database/scripts/*.sh 2>/dev/null || true
 
 # Vérification stricte des variables d'environnement obligatoires
 if [ -z "$MYSQL_ADMIN_USER" ] || [ -z "$MYSQL_ADMIN_PASSWORD" ]; then
-    echo "❌ ERREUR: Les variables MYSQL_ADMIN_USER et MYSQL_ADMIN_PASSWOR doivent être définies dans le containerEnv de devcontainer.json"
+    echo "❌ ERREUR: Les variables MYSQL_ADMIN_USER et MYSQL_ADMIN_PASSWORD doivent être définies dans le containerEnv de devcontainer.json"
     exit 1
 fi
 
@@ -57,22 +58,21 @@ fi
 # 2. INSTALLATION ET CONFIGURATION PHPMYADMIN
 echo "🌐 Installation et configuration phpMyAdmin..."
 
-# Supprimer l'ancienne installation si elle existe
-if [ -d "/usr/src/phpmyadmin" ]; then
-    sudo rm -rf /usr/src/phpmyadmin
-fi
-
-# Télécharger et installer phpMyAdmin
-cd /tmp
-wget -q https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
-if [ $? -eq 0 ]; then
-    tar xzf phpMyAdmin-latest-all-languages.tar.gz
-    sudo mv phpMyAdmin-*-all-languages /usr/src/phpmyadmin
-    rm phpMyAdmin-latest-all-languages.tar.gz
-    echo "✅ phpMyAdmin téléchargé et installé"
+# Télécharger et installer phpMyAdmin (si absent)
+if [ ! -d "/usr/src/phpmyadmin" ]; then
+    cd /tmp
+    wget -q https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz
+    if [ $? -eq 0 ]; then
+        tar xzf phpMyAdmin-latest-all-languages.tar.gz
+        sudo mv phpMyAdmin-*-all-languages /usr/src/phpmyadmin
+        rm phpMyAdmin-latest-all-languages.tar.gz
+        echo "✅ phpMyAdmin téléchargé et installé"
+    else
+        echo "❌ Erreur téléchargement phpMyAdmin"
+        exit 1
+    fi
 else
-    echo "❌ Erreur téléchargement phpMyAdmin"
-    exit 1
+    echo "ℹ️ phpMyAdmin déjà présent, téléchargement sauté"
 fi
 
 # Configurer phpMyAdmin
@@ -112,5 +112,4 @@ sudo chmod -R 755 /usr/src/phpmyadmin
 sudo chmod -R 777 /usr/src/phpmyadmin/{tmp,upload,save}
 
 echo "✅ phpMyAdmin et mysql configurés"
-echo "✅ MySQL: mysql -u $MYSQL_ADMIN_USER -p$MYSQL_ADMIN_PASSWORD"
 echo "✅ Environnement LAMP prêt!"

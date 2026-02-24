@@ -29,8 +29,7 @@
 				"neilbrayfield.php-docblocker",
 				"SonarSource.sonarlint-vscode",
 				"cweijan.vscode-mysql-client2",
-				"donjayamanne.githistory",
-				"Github.copilot"
+				"donjayamanne.githistory"
 			]
 		}
 	},

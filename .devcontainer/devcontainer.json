@@ -11,7 +11,7 @@
 
 	// Liste des fonctionnalités à ajouter au conteneur de développement. // Plus d'informations : https://containers.dev/features.
 	"features": {
-		"ghcr.io/devcontainers/features/node:1": {
+		"ghcr.io/devcontainers/features/node:2": {
 			"version": "18"
 		}
 	},
